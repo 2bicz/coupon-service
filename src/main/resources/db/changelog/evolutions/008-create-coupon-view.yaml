@@ -1,0 +1,22 @@
+databaseChangeLog:
+  - changeSet:
+      id: 008-create-coupon-view
+      author: Patryk Tubicz
+      changes:
+        - createView:
+            viewName: coupon_view
+            selectQuery: |
+              SELECT
+                  c.id,
+                  c.created_at,
+                  c.code,
+                  c.usage_limit,
+                  COUNT(cr.id) AS usage_count
+              FROM coupon c
+              LEFT JOIN coupon_redemption cr
+                  ON cr.coupon_id = c.id
+              GROUP BY
+                  c.id,
+                  c.code,
+                  c.usage_limit,
+                  c.created_at

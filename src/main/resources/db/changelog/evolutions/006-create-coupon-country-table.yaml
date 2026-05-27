@@ -1,0 +1,37 @@
+databaseChangeLog:
+  - changeSet:
+      id: 006-create-coupon-country-table
+      author: Patryk Tubicz
+      changes:
+        - createTable:
+            tableName: coupon_country
+            columns:
+              - column:
+                  name: coupon_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: country_code
+                  type: char(2)
+                  constraints:
+                    nullable: false
+
+        - addPrimaryKey:
+            tableName: coupon_country
+            columnNames: coupon_id, country_code
+            constraintName: pk_coupon_country
+
+        - addForeignKeyConstraint:
+            baseTableName: coupon_country
+            baseColumnNames: coupon_id
+            referencedTableName: coupon
+            referencedColumnNames: id
+            constraintName: fk_cc_coupon
+
+        - addForeignKeyConstraint:
+            baseTableName: coupon_country
+            baseColumnNames: country_code
+            referencedTableName: country
+            referencedColumnNames: code
+            constraintName: fk_cc_country

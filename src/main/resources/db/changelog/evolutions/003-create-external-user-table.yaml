@@ -1,0 +1,41 @@
+databaseChangeLog:
+  - changeSet:
+      id: 003-create-external-user-table
+      author: Patryk Tubicz
+      changes:
+        - createTable:
+            tableName: external_user
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: external_system_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: origin_user_id
+                  type: text
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamptz
+                  defaultValueComputed: now()
+
+        - addUniqueConstraint:
+            tableName: external_user
+            columnNames: external_system_id, origin_user_id
+            constraintName: uq_origin_system_user
+
+        - addForeignKeyConstraint:
+            baseTableName: external_user
+            baseColumnNames: external_system_id
+            referencedTableName: external_system
+            referencedColumnNames: id
+            constraintName: fk_external_user_external_system

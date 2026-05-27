@@ -1,0 +1,37 @@
+databaseChangeLog:
+  - changeSet:
+      id: 005-create-coupon-table
+      author: Patryk Tubicz
+      changes:
+        - createTable:
+            tableName: coupon
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: code
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: usage_limit
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamptz
+                  defaultValueComputed: now()
+
+        - createIndex:
+            indexName: idx_coupon_code
+            tableName: coupon
+            columns:
+              - column:
+                  name: code

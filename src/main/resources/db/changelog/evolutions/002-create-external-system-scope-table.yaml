@@ -1,0 +1,27 @@
+databaseChangeLog:
+  - changeSet:
+      id: 002-create-external-system-scope-table
+      author: Patryk Tubicz
+      changes:
+        - createTable:
+            tableName: external_system_scope
+            columns:
+              - column:
+                  name: external_system_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: scope
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamptz
+                  defaultValueComputed: now()
+
+        - addUniqueConstraint:
+            tableName: external_system_scope
+            columnNames: external_system_id, scope
+            constraintName: uq_system_scope

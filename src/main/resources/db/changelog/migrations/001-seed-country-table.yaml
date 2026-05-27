@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001-seed-country-table
+      author: Patryk Tubicz
+      changes:
+        - loadData:
+            file: db/changelog/migrations/data/countries.csv
+            tableName: country
+            separator: ","
+            columns:
+              - column:
+                  name: code
+                  type: STRING
