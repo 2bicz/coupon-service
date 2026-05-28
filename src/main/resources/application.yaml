@@ -1,18 +1,27 @@
 spring:
   application:
     name: coupon-service
+
   datasource:
-    url: jdbc:postgresql://localhost:5432/mydb
-    username: user
-    password: pass
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:coupon_service}
+    username: ${DB_USER:user}
+    password: ${DB_PASSWORD:pass}
 
-    jpa:
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
       hibernate:
-        ddl-auto: validate
-      properties:
-        hibernate:
-          format_sql: true
-      show-sql: true
+        format_sql: true
+    show-sql: true
 
-    liquibase:
-      change-log: classpath:db/changelog/db.changelog-master.yaml
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+
+  security:
+    user:
+      name: ${SECURITY_USER_NAME:admin}
+      password: ${SECURITY_USER_PASSWORD:admin}
+
+server:
+  port: ${SERVER_PORT:8080}

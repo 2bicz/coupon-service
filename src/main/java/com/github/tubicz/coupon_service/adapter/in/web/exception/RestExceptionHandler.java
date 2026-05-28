@@ -1,6 +1,7 @@
 package com.github.tubicz.coupon_service.adapter.in.web.exception;
 
 import com.github.tubicz.coupon_service.application.exception.AlreadyExistingCouponCodeException;
+import com.github.tubicz.coupon_service.application.exception.CouponNotFoundException;
 import com.github.tubicz.coupon_service.application.exception.CountryNotFoundException;
 import com.github.tubicz.coupon_service.domain.exception.InvalidCouponCodeFormatException;
 import com.github.tubicz.coupon_service.domain.exception.InvalidUsageLimitException;
@@ -69,6 +70,15 @@ class RestExceptionHandler {
                 .title("Invalid coupon code format")
                 .detail(exception.getMessage())
                 .errorCode(ErrorCode.INVALID_COUPON_CODE_FORMAT)
+                .build();
+    }
+
+    @ExceptionHandler(CouponNotFoundException.class)
+    public ProblemDetail handle(CouponNotFoundException exception) {
+        return new ProblemDetailBuilder(HttpStatus.NOT_FOUND)
+                .title("Coupon not found")
+                .detail(exception.getMessage())
+                .errorCode(ErrorCode.COUPON_NOT_FOUND)
                 .build();
     }
 
