@@ -2,8 +2,10 @@ package com.github.tubicz.coupon_service.domain.query;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.UUID;
 
 public record CouponView(
+        UUID id,
         String code,
         Instant createdAt,
         int usageLimit,

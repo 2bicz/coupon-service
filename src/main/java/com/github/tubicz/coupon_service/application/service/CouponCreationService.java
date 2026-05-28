@@ -1,7 +1,7 @@
 package com.github.tubicz.coupon_service.application.service;
 
 import com.github.tubicz.coupon_service.application.exception.AlreadyExistingCouponCodeException;
-import com.github.tubicz.coupon_service.application.exception.NotExistingCountryException;
+import com.github.tubicz.coupon_service.application.exception.CountryNotFoundException;
 import com.github.tubicz.coupon_service.application.port.in.CouponCreationUseCase;
 import com.github.tubicz.coupon_service.application.port.in.CreateCouponCommand;
 import com.github.tubicz.coupon_service.application.port.out.CountryRepositoryPort;
@@ -30,7 +30,7 @@ class CouponCreationService implements CouponCreationUseCase {
 
     private void assertAllCountriesExist(Collection<String> countries) {
         Set<String> unknownCountryCodes = countryRepository.findUnknownCountryCodes(countries);
-        if (!unknownCountryCodes.isEmpty()) throw new NotExistingCountryException(unknownCountryCodes);
+        if (!unknownCountryCodes.isEmpty()) throw new CountryNotFoundException(unknownCountryCodes);
     }
 
     private void assertCouponCodeNotExists(String code) {

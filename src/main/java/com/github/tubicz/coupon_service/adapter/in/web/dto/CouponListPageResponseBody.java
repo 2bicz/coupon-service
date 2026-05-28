@@ -4,7 +4,7 @@ import java.net.URI;
 import java.util.List;
 
 public record CouponListPageResponseBody(
-        List<CouponDto> content,
+        List<CouponViewResponseBody> content,
         int page,
         int size,
         long totalElements,

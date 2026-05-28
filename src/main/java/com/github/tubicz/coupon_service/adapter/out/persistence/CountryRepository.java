@@ -6,8 +6,8 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.Collection;
 import java.util.Set;
-import java.util.UUID;
 
-interface CouponJpaRepository extends JpaRepository<CouponJpaEntity, UUID> {
-    boolean existsByCodeIgnoreCase(String code);
+interface CountryRepository extends JpaRepository<CountryEntity, String> {
+    @Query("SELECT c.code FROM CountryEntity c WHERE c.code IN :codes")
+    Set<String> findExistingCodesAmong(@Param("codes") Collection<String> codes);
 }

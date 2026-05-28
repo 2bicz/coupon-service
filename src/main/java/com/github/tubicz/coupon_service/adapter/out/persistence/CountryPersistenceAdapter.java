@@ -11,7 +11,7 @@ import java.util.Set;
 @Component
 @RequiredArgsConstructor
 class CountryPersistenceAdapter implements CountryRepositoryPort {
-    private final CountryJpaRepository jpa;
+    private final CountryRepository jpa;
 
     @Override
     public Set<String> findUnknownCountryCodes(Collection<String> countryCodes) {

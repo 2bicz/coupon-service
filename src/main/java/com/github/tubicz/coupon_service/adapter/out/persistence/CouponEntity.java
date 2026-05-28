@@ -17,7 +17,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Entity
 @Table(name = "coupon")
-class CouponJpaEntity {
+class CouponEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
@@ -38,5 +38,5 @@ class CouponJpaEntity {
             joinColumns = @JoinColumn(name = "coupon_id"),
             inverseJoinColumns = @JoinColumn(name = "country_code")
     )
-    private List<CountryJpaEntity> countries;
+    private List<CountryEntity> countries;
 }

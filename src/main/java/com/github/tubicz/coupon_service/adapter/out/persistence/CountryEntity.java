@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Table(name = "country")
-class CountryJpaEntity {
+class CountryEntity {
     @Id
     @Column(name = "code", columnDefinition = "char(2)", length = 2, nullable = false, updatable = false)
     private String code;

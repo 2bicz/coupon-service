@@ -1,7 +1,7 @@
 package com.github.tubicz.coupon_service.adapter.in.web.exception;
 
 import com.github.tubicz.coupon_service.application.exception.AlreadyExistingCouponCodeException;
-import com.github.tubicz.coupon_service.application.exception.NotExistingCountryException;
+import com.github.tubicz.coupon_service.application.exception.CountryNotFoundException;
 import com.github.tubicz.coupon_service.domain.exception.InvalidCouponCodeFormatException;
 import com.github.tubicz.coupon_service.domain.exception.InvalidUsageLimitException;
 import jakarta.validation.ConstraintViolation;
@@ -81,8 +81,8 @@ class RestExceptionHandler {
                 .build();
     }
 
-    @ExceptionHandler(NotExistingCountryException.class)
-    public ProblemDetail handle(NotExistingCountryException exception) {
+    @ExceptionHandler(CountryNotFoundException.class)
+    public ProblemDetail handle(CountryNotFoundException exception) {
         return new ProblemDetailBuilder(HttpStatus.NOT_FOUND)
                 .title("Country does not exist")
                 .detail(exception.getMessage())

@@ -11,10 +11,13 @@ databaseChangeLog:
                   c.created_at,
                   c.code,
                   c.usage_limit,
-                  COUNT(cr.id) AS usage_count
+                  COUNT(cr.id) AS usage_count,
+                  COALESCE(ARRAY_AGG(cc.country_code), ARRAY[]::TEXT[]) AS country_codes
               FROM coupon c
               LEFT JOIN coupon_redemption cr
                   ON cr.coupon_id = c.id
+              LEFT JOIN coupon_country cc
+                  ON cc.coupon_id = c.id
               GROUP BY
                   c.id,
                   c.code,
