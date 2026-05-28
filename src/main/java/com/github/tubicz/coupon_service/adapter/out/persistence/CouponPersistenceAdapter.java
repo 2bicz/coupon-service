@@ -1,59 +1,33 @@
 package com.github.tubicz.coupon_service.adapter.out.persistence;
 
-import com.github.tubicz.coupon_service.application.port.in.GetCouponsQuery;
 import com.github.tubicz.coupon_service.application.port.out.CouponRepositoryPort;
 import com.github.tubicz.coupon_service.domain.command.Coupon;
-import com.github.tubicz.coupon_service.domain.query.CouponPage;
-import com.github.tubicz.coupon_service.domain.query.CouponView;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
-import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
 class CouponPersistenceAdapter implements CouponRepositoryPort {
-    private final CouponRepository write;
-    private final CouponViewRepository read;
+    private final CouponRepository repository;
 
     @Override
-    public Optional<CouponView> getById(String id) {
-        return read.findById(UUID.fromString(id)).map(this::toDomain);
+    public Optional<Coupon> getByCodeWithLock(String code) {
+        return repository.findByCodeIgnoreCaseWithLock(code).map(this::toDomain);
     }
 
     @Override
-    public CouponPage getAll(GetCouponsQuery query) {
-        var spec = Specification
-                .where(CouponViewSpecification.hasCodeLike(query.search()))
-                .and(CouponViewSpecification.createdAtFrom(query.createdAtFrom()))
-                .and(CouponViewSpecification.createdAtTo(query.createdAtTo()));
-
-        var pageable = PageRequest.of(query.page(), query.size(), Sort.by(Sort.Direction.DESC, "createdAt"));
-        var page = read.findAll(spec, pageable);
-
-        return new CouponPage(
-                page.getContent().stream().map(this::toDomain).toList(),
-                page.getNumber(),
-                page.getSize(),
-                page.getTotalElements()
-        );
-    }
-
-    @Override
-    public boolean existsByCodeCaseInsensitive(String code) {
-        return read.existsByCodeIgnoreCase(code);
+    public boolean existsByCode(String code) {
+        return repository.existsByCodeIgnoreCase(code);
     }
 
     @Override
     public String create(Coupon coupon) {
-        return write.save(fromDomain(coupon)).getId().toString();
+        return repository.save(toEntity(coupon)).getId().toString();
     }
 
-    private CouponEntity fromDomain(Coupon domain) {
+    private CouponEntity toEntity(Coupon domain) {
         var allowedCountries = domain.allowedCountryCodes().stream().map(CountryEntity::new).toList();
         return CouponEntity.builder()
                 .code(domain.code())
@@ -62,14 +36,12 @@ class CouponPersistenceAdapter implements CouponRepositoryPort {
                 .build();
     }
 
-    private CouponView toDomain(CouponViewEntity entity) {
-        return new CouponView(
-                entity.getId(),
+    private Coupon toDomain(CouponEntity entity) {
+        return new Coupon(
+                entity.getId().toString(),
                 entity.getCode(),
-                entity.getCreatedAt(),
                 entity.getUsageLimit(),
-                entity.getUsageCount(),
-                entity.getCountryCodes()
+                entity.getCountries().stream().map(CountryEntity::getCode).toList()
         );
     }
 }

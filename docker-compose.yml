@@ -16,11 +16,26 @@ services:
       retries: 5
     restart: unless-stopped
 
+  geoipupdate:
+    image: ghcr.io/maxmind/geoipupdate:latest
+    environment:
+      GEOIPUPDATE_ACCOUNT_ID: ${GEOIPUPDATE_ACCOUNT_ID}
+      GEOIPUPDATE_LICENSE_KEY: ${GEOIPUPDATE_LICENSE_KEY}
+      GEOIPUPDATE_EDITION_IDS: GeoLite2-Country
+      GEOIPUPDATE_FREQUENCY: 168
+    volumes:
+      - geoip_data:/usr/share/GeoIP
+    restart: unless-stopped
+
   app:
     build: .
     env_file: .env
+    environment:
+      GEOLOCATION_DB_PATH: /app/data/GeoLite2-Country.mmdb
     ports:
       - "${APP_EXTERNAL_PORT:-8080}:${SERVER_PORT:-8080}"
+    volumes:
+      - geoip_data:/app/data:ro
     depends_on:
       postgres:
         condition: service_healthy
@@ -28,3 +43,4 @@ services:
 
 volumes:
   postgres_data:
+  geoip_data:

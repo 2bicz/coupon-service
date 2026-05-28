@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 004-create-country-table
+      id: 003-create-country-table
       author: Patryk Tubicz
       changes:
         - createTable:

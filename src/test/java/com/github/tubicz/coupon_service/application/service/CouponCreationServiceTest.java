@@ -36,7 +36,7 @@ class CouponCreationServiceTest {
 
     @Test
     void createReturnsCouponId() {
-        when(couponRepositoryPort.existsByCodeCaseInsensitive("SUMMER20")).thenReturn(false);
+        when(couponRepositoryPort.existsByCode("SUMMER20")).thenReturn(false);
         when(countryRepository.findUnknownCountryCodes(any())).thenReturn(Set.of());
         when(couponRepositoryPort.create(any())).thenReturn("generated-id");
 
@@ -47,7 +47,7 @@ class CouponCreationServiceTest {
 
     @Test
     void createPassesCorrectCouponToRepository() {
-        when(couponRepositoryPort.existsByCodeCaseInsensitive(anyString())).thenReturn(false);
+        when(couponRepositoryPort.existsByCode(anyString())).thenReturn(false);
         when(countryRepository.findUnknownCountryCodes(any())).thenReturn(Set.of());
         when(couponRepositoryPort.create(any())).thenReturn("id");
 
@@ -63,7 +63,7 @@ class CouponCreationServiceTest {
 
     @Test
     void createThrowsWhenCodeAlreadyExists() {
-        when(couponRepositoryPort.existsByCodeCaseInsensitive("TAKEN")).thenReturn(true);
+        when(couponRepositoryPort.existsByCode("TAKEN")).thenReturn(true);
 
         assertThatThrownBy(() -> service.create(new CreateCouponCommand("TAKEN", 10, List.of("US"))))
                 .isInstanceOf(AlreadyExistingCouponCodeException.class);
@@ -74,7 +74,7 @@ class CouponCreationServiceTest {
 
     @Test
     void createThrowsWhenUnknownCountryCodes() {
-        when(couponRepositoryPort.existsByCodeCaseInsensitive(anyString())).thenReturn(false);
+        when(couponRepositoryPort.existsByCode(anyString())).thenReturn(false);
         when(countryRepository.findUnknownCountryCodes(any())).thenReturn(Set.of("XX", "ZZ"));
 
         assertThatThrownBy(() -> service.create(new CreateCouponCommand("CODE", 10, List.of("US", "XX", "ZZ"))))
@@ -85,7 +85,7 @@ class CouponCreationServiceTest {
 
     @Test
     void createChecksCodeExistenceBeforeCountries() {
-        when(couponRepositoryPort.existsByCodeCaseInsensitive("EXISTING")).thenReturn(true);
+        when(couponRepositoryPort.existsByCode("EXISTING")).thenReturn(true);
 
         assertThatThrownBy(() -> service.create(new CreateCouponCommand("EXISTING", 10, List.of("XX"))))
                 .isInstanceOf(AlreadyExistingCouponCodeException.class);

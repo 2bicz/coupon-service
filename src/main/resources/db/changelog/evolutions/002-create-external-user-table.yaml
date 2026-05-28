@@ -1,10 +1,10 @@
 databaseChangeLog:
   - changeSet:
-      id: 005-create-coupon-table
+      id: 002-create-external-user-table
       author: Patryk Tubicz
       changes:
         - createTable:
-            tableName: coupon
+            tableName: external_user
             columns:
               - column:
                   name: id
@@ -14,14 +14,13 @@ databaseChangeLog:
                     primaryKey: true
                     nullable: false
               - column:
-                  name: code
-                  type: varchar(255)
+                  name: external_system_id
+                  type: uuid
                   constraints:
                     nullable: false
-                    unique: true
               - column:
-                  name: usage_limit
-                  type: int
+                  name: origin_user_id
+                  type: text
                   constraints:
                     nullable: false
               - column:
@@ -29,9 +28,14 @@ databaseChangeLog:
                   type: timestamptz
                   defaultValueComputed: now()
 
-        - createIndex:
-            indexName: idx_coupon_code
-            tableName: coupon
-            columns:
-              - column:
-                  name: code
+        - addUniqueConstraint:
+            tableName: external_user
+            columnNames: external_system_id, origin_user_id
+            constraintName: uq_origin_system_user
+
+        - addForeignKeyConstraint:
+            baseTableName: external_user
+            baseColumnNames: external_system_id
+            referencedTableName: external_system
+            referencedColumnNames: id
+            constraintName: fk_external_user_external_system

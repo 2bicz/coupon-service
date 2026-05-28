@@ -2,18 +2,16 @@ databaseChangeLog:
   - include:
       file: db/changelog/evolutions/001-create-external-system-table.yaml
   - include:
-      file: db/changelog/evolutions/002-create-external-system-scope-table.yaml
+      file: db/changelog/evolutions/002-create-external-user-table.yaml
   - include:
-      file: db/changelog/evolutions/003-create-external-user-table.yaml
-  - include:
-      file: db/changelog/evolutions/004-create-country-table.yaml
+      file: db/changelog/evolutions/003-create-country-table.yaml
   - include:
       file: db/changelog/migrations/001-seed-country-table.yaml
   - include:
-      file: db/changelog/evolutions/005-create-coupon-table.yaml
+      file: db/changelog/evolutions/004-create-coupon-table.yaml
   - include:
-      file: db/changelog/evolutions/006-create-coupon-country-table.yaml
+      file: db/changelog/evolutions/005-create-coupon-country-table.yaml
   - include:
-      file: db/changelog/evolutions/007-create-coupon-redemption-table.yaml
+      file: db/changelog/evolutions/006-create-coupon-redemption-table.yaml
   - include:
-      file: db/changelog/evolutions/008-create-coupon-view.yaml
+      file: db/changelog/evolutions/007-create-coupon-view.yaml

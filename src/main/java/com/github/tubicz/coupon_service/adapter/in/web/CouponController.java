@@ -56,6 +56,7 @@ class CouponController {
         return ResponseEntity.ok(response);
     }
 
+    // todo: Move response building to separate mapper class
     @GetMapping
     ResponseEntity<CouponListPageResponseBody> getListOfCoupons(@Valid CouponListQuery queryParams) {
         var query = new GetCouponsQuery(
@@ -99,12 +100,5 @@ class CouponController {
                 .build()
                 .toUri();
     }
-//
-//
-//    todo: Move it to separate controller '/coupon-redemption'
-//    @PostMapping("/{code}/redemption")
-//    ResponseEntity<EntryCreatedResponseBody> redeemCouponByCode(@PathVariable String code, @RequestBody @Valid RedeemCouponRequestBody requestBody) {
-//
-//    }
 
 }

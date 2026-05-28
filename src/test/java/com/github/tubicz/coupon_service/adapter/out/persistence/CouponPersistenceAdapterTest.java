@@ -48,15 +48,15 @@ class CouponPersistenceAdapterTest {
 
     @Test
     void existsByCodeCaseInsensitiveReturnsFalseForNonExistent() {
-        assertThat(couponAdapter.existsByCodeCaseInsensitive("MISSING")).isFalse();
+        assertThat(couponAdapter.existsByCode("MISSING")).isFalse();
     }
 
     @Test
     void existsByCodeCaseInsensitiveReturnsTrueAfterCreate() {
         couponAdapter.create(new Coupon("CASECHECK", 5, List.of("DE")));
 
-        assertThat(couponAdapter.existsByCodeCaseInsensitive("CASECHECK")).isTrue();
-        assertThat(couponAdapter.existsByCodeCaseInsensitive("casecheck")).isTrue();
+        assertThat(couponAdapter.existsByCode("CASECHECK")).isTrue();
+        assertThat(couponAdapter.existsByCode("casecheck")).isTrue();
     }
 
     @Test

@@ -26,7 +26,7 @@ class CouponEntity {
     private String code;
 
     @Column(name = "usage_limit",  nullable = false)
-    private int usageLimit;
+    private Integer usageLimit;
 
     @CreatedDate
     @Column(name = "created_at", nullable = false)

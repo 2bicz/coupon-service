@@ -24,7 +24,7 @@ class CouponCreationService implements CouponCreationUseCase {
         assertCouponCodeNotExists(command.code());
         assertAllCountriesExist(command.allowedCountryCodes());
 
-        var coupon = new Coupon(command.code(), command.usageLimit(), command.allowedCountryCodes());
+        var coupon = new Coupon(null, command.code(), command.usageLimit(), command.allowedCountryCodes());
         return couponRepositoryPort.create(coupon);
     }
 
@@ -34,7 +34,7 @@ class CouponCreationService implements CouponCreationUseCase {
     }
 
     private void assertCouponCodeNotExists(String code) {
-        if (couponRepositoryPort.existsByCodeCaseInsensitive(code)) {
+        if (couponRepositoryPort.existsByCode(code)) {
             throw new AlreadyExistingCouponCodeException(code);
         }
     }

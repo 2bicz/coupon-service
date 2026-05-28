@@ -1,10 +1,14 @@
 package com.github.tubicz.coupon_service.adapter.in.web.exception;
 
 import com.github.tubicz.coupon_service.application.exception.AlreadyExistingCouponCodeException;
+import com.github.tubicz.coupon_service.domain.exception.CouponAlreadyRedeemedByUserException;
+import com.github.tubicz.coupon_service.domain.exception.CouponExhaustedException;
+import com.github.tubicz.coupon_service.domain.exception.CouponNotEligibleForCountryException;
 import com.github.tubicz.coupon_service.application.exception.CouponNotFoundException;
 import com.github.tubicz.coupon_service.application.exception.CountryNotFoundException;
 import com.github.tubicz.coupon_service.domain.exception.InvalidCouponCodeFormatException;
 import com.github.tubicz.coupon_service.domain.exception.InvalidUsageLimitException;
+import com.github.tubicz.coupon_service.application.exception.IpNotResolvableException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
@@ -97,6 +101,42 @@ class RestExceptionHandler {
                 .title("Country does not exist")
                 .detail(exception.getMessage())
                 .errorCode(ErrorCode.COUNTRY_NOT_FOUND)
+                .build();
+    }
+
+    @ExceptionHandler(IpNotResolvableException.class)
+    public ProblemDetail handle(IpNotResolvableException exception) {
+        return new ProblemDetailBuilder(HttpStatus.UNPROCESSABLE_ENTITY)
+                .title("IP address not resolvable")
+                .detail(exception.getMessage())
+                .errorCode(ErrorCode.IP_NOT_RESOLVABLE)
+                .build();
+    }
+
+    @ExceptionHandler(CouponNotEligibleForCountryException.class)
+    public ProblemDetail handle(CouponNotEligibleForCountryException exception) {
+        return new ProblemDetailBuilder(HttpStatus.FORBIDDEN)
+                .title("Coupon not eligible for your country")
+                .detail(exception.getMessage())
+                .errorCode(ErrorCode.COUPON_NOT_ELIGIBLE_FOR_COUNTRY)
+                .build();
+    }
+
+    @ExceptionHandler(CouponExhaustedException.class)
+    public ProblemDetail handle(CouponExhaustedException exception) {
+        return new ProblemDetailBuilder(HttpStatus.CONFLICT)
+                .title("Coupon exhausted")
+                .detail(exception.getMessage())
+                .errorCode(ErrorCode.COUPON_EXHAUSTED)
+                .build();
+    }
+
+    @ExceptionHandler(CouponAlreadyRedeemedByUserException.class)
+    public ProblemDetail handle(CouponAlreadyRedeemedByUserException exception) {
+        return new ProblemDetailBuilder(HttpStatus.CONFLICT)
+                .title("Coupon already redeemed")
+                .detail(exception.getMessage())
+                .errorCode(ErrorCode.COUPON_ALREADY_REDEEMED)
                 .build();
     }
 }

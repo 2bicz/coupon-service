@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 007-create-coupon-redemption-table
+      id: 006-create-coupon-redemption-table
       author: Patryk Tubicz
       changes:
         - createTable:

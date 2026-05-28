@@ -3,7 +3,7 @@ package com.github.tubicz.coupon_service.adapter.in.web.validation;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
-public class CountryCodeValidator implements ConstraintValidator<ValidCountryCode, String> {
+class CountryCodeValidator implements ConstraintValidator<ValidCountryCode, String> {
     @Override
     public boolean isValid(
             String value,

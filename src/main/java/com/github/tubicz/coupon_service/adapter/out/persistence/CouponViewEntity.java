@@ -20,10 +20,10 @@ class CouponViewEntity {
     private String code;
 
     @Column(name = "usage_limit")
-    private int usageLimit;
+    private Integer usageLimit;
 
     @Column(name = "usage_count")
-    private int usageCount;
+    private Integer usageCount;
 
     @Column(name = "created_at")
     private Instant createdAt;
