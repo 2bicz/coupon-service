@@ -2,9 +2,9 @@ spring:
   application:
     name: coupon-service
   datasource:
-    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:coupon_service}
-    username: ${DB_USER:user}
-    password: ${DB_PASSWORD:pass}
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:coupon_service_db}
+    username: ${DB_USER:coupon_service_user}
+    password: ${DB_PASSWORD:change_me}
   jpa:
     hibernate:
       ddl-auto: validate
@@ -19,7 +19,7 @@ server:
   port: ${SERVER_PORT:8080}
 
 geolocation:
-  db-path: ${GEOLOCATION_DB_PATH:/app/data/GeoLite2-Country.mmdb}
+  db-path: ${GEOLOCATION_DB_PATH:./data/geoip/GeoLite2-Country.mmdb}
 
 api:
-  key: ${API_KEY:changeme}
+  key: ${API_KEY:change_me}
