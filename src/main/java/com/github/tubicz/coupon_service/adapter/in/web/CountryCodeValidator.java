@@ -1,4 +1,4 @@
-package com.github.tubicz.coupon_service.adapter.in.web.validation;
+package com.github.tubicz.coupon_service.adapter.in.web;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;

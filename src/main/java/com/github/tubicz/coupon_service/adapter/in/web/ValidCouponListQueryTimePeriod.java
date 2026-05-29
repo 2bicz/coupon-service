@@ -1,4 +1,4 @@
-package com.github.tubicz.coupon_service.adapter.in.web.validation;
+package com.github.tubicz.coupon_service.adapter.in.web;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = CouponListQueryTimePeriodValidator.class)
-public @interface ValidCouponListQueryTimePeriod {
+@interface ValidCouponListQueryTimePeriod {
     String message() default "Invalid time period. 'From' date can't be after 'to' date!";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};

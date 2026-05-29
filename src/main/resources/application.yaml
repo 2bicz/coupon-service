@@ -1,12 +1,10 @@
 spring:
   application:
     name: coupon-service
-
   datasource:
     url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:coupon_service}
     username: ${DB_USER:user}
     password: ${DB_PASSWORD:pass}
-
   jpa:
     hibernate:
       ddl-auto: validate
@@ -14,17 +12,14 @@ spring:
       hibernate:
         format_sql: true
     show-sql: true
-
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
-
-  security:
-    user:
-      name: ${SECURITY_USER_NAME:admin}
-      password: ${SECURITY_USER_PASSWORD:admin}
 
 server:
   port: ${SERVER_PORT:8080}
 
 geolocation:
   db-path: ${GEOLOCATION_DB_PATH:/app/data/GeoLite2-Country.mmdb}
+
+api:
+  key: ${API_KEY:changeme}

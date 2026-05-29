@@ -15,7 +15,7 @@ import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
-public class CouponQueryAdapter implements CouponViewRepositoryPort {
+class CouponQueryAdapter implements CouponViewRepositoryPort {
     private final CouponViewRepository read;
 
     @Override

@@ -1,6 +1,5 @@
 package com.github.tubicz.coupon_service.adapter.in.web;
 
-import com.github.tubicz.coupon_service.adapter.in.web.dto.CreateCouponRedemptionRequestBody;
 import com.github.tubicz.coupon_service.application.port.in.CouponRedemptionUseCase;
 import com.github.tubicz.coupon_service.application.port.in.RedeemCouponCommand;
 import jakarta.servlet.http.HttpServletRequest;

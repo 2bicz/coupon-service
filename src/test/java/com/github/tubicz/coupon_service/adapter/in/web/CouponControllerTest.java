@@ -1,7 +1,6 @@
 package com.github.tubicz.coupon_service.adapter.in.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.tubicz.coupon_service.adapter.in.web.dto.CreateCouponRequestBody;
 import com.github.tubicz.coupon_service.application.exception.AlreadyExistingCouponCodeException;
 import com.github.tubicz.coupon_service.application.exception.CountryNotFoundException;
 import com.github.tubicz.coupon_service.application.exception.CouponNotFoundException;
@@ -27,8 +26,10 @@ import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -220,6 +221,23 @@ class CouponControllerTest {
                 .thenThrow(new CouponNotFoundException("not found"));
 
         mockMvc.perform(get("/coupon/{id}", UUID.randomUUID()))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.errorCode").value("COUPON_NOT_FOUND"));
+    }
+
+    // DELETE /coupon/{id}
+
+    @Test
+    void deleteCouponReturns204() throws Exception {
+        mockMvc.perform(delete("/coupon/{id}", UUID.randomUUID()).with(csrf()))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void deleteCouponReturns404WhenNotFound() throws Exception {
+        doThrow(new CouponNotFoundException("not found")).when(couponDeletionUseCase).delete(any());
+
+        mockMvc.perform(delete("/coupon/{id}", UUID.randomUUID()).with(csrf()))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.errorCode").value("COUPON_NOT_FOUND"));
     }

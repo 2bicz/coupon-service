@@ -1,9 +1,9 @@
-package com.github.tubicz.coupon_service.adapter.in.web.dto;
+package com.github.tubicz.coupon_service.adapter.in.web;
 
 import java.net.URI;
 import java.util.List;
 
-public record CouponListPageResponseBody(
+record CouponListPageResponseBody(
         List<CouponViewResponseBody> content,
         int page,
         int size,

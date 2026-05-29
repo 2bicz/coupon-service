@@ -1,8 +1,8 @@
-package com.github.tubicz.coupon_service.adapter.in.web.dto;
+package com.github.tubicz.coupon_service.adapter.in.web;
 
 import jakarta.validation.constraints.NotBlank;
 
-public record CreateCouponRedemptionRequestBody(
+record CreateCouponRedemptionRequestBody(
         @NotBlank String couponCode,
         @NotBlank String externalUser,
         @NotBlank String externalSystem

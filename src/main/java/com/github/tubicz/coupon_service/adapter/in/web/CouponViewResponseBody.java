@@ -1,9 +1,9 @@
-package com.github.tubicz.coupon_service.adapter.in.web.dto;
+package com.github.tubicz.coupon_service.adapter.in.web;
 
 import java.time.Instant;
 import java.util.List;
 
-public record CouponViewResponseBody(
+record CouponViewResponseBody(
         String code,
         Instant createdAt,
         int usageLimit,

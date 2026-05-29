@@ -1,6 +1,5 @@
 package com.github.tubicz.coupon_service.adapter.in.web;
 
-import com.github.tubicz.coupon_service.adapter.in.web.dto.*;
 import com.github.tubicz.coupon_service.application.port.in.CouponCreationUseCase;
 import com.github.tubicz.coupon_service.application.port.in.CouponDeletionUseCase;
 import com.github.tubicz.coupon_service.application.port.in.CouponReadUseCase;

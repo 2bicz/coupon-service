@@ -1,4 +1,4 @@
-package com.github.tubicz.coupon_service.adapter.in.web.validation;
+package com.github.tubicz.coupon_service.adapter.in.web;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
@@ -13,7 +13,7 @@ import java.lang.annotation.*;
         ElementType.TYPE_USE
 })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ValidCountryCode {
+@interface ValidCountryCode {
 
     String message()
             default "Invalid country code format. Only ISO 3166-1 alpha-2 is allowed.";

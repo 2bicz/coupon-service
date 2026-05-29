@@ -4,6 +4,7 @@ import com.github.tubicz.coupon_service.application.port.out.ExternalPartyReposi
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
@@ -15,7 +16,7 @@ class ExternalPartyPersistenceAdapter implements ExternalPartyRepositoryPort {
     private final ExternalUserRepository userRepository;
 
     @Override
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public String findOrCreateExternalUserId(String systemClientId, String originUserId) {
         var system = findOrCreateSystem(systemClientId);
         return findOrCreateUser(system.getId(), originUserId).getId().toString();
