@@ -1,0 +1,9 @@
+{
+  "properties": [
+    {
+      "name": "geolocation.db-path",
+      "type": "java.lang.String",
+      "description": "Path to the MaxMind GeoLite2 country database file."
+    }
+  ]
+}

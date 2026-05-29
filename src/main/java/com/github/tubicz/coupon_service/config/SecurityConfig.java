@@ -16,11 +16,14 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 class SecurityConfig {
 
     @Bean
-    SecurityFilterChain filterChain(HttpSecurity http, ApiKeyProperties apiKeyProperties) throws Exception {
+    SecurityFilterChain filterChain(HttpSecurity http, ApiKeyProperties apiKeyProperties) {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**").permitAll()
+                        .anyRequest().authenticated()
+                )
                 .addFilterBefore(new ApiKeyAuthFilter(apiKeyProperties.key()), UsernamePasswordAuthenticationFilter.class)
                 .build();
     }

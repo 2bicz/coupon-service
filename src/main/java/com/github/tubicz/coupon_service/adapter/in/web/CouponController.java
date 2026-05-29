@@ -7,8 +7,16 @@ import com.github.tubicz.coupon_service.application.port.in.CreateCouponCommand;
 import com.github.tubicz.coupon_service.application.port.in.GetCouponsQuery;
 import com.github.tubicz.coupon_service.domain.query.CouponPage;
 import com.github.tubicz.coupon_service.domain.query.CouponView;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.headers.Header;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +25,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
 
+@Tag(name = "Coupons", description = "Coupon management")
 @Validated
 @RequiredArgsConstructor
 @RestController
@@ -26,6 +35,16 @@ class CouponController {
     private final CouponReadUseCase couponReadUseCase;
     private final CouponDeletionUseCase couponDeletionUseCase;
 
+    @Operation(summary = "Create a new coupon")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Coupon created",
+                    headers = @Header(name = "Location", description = "URI of the created coupon",
+                            schema = @Schema(type = "string", format = "uri"))),
+            @ApiResponse(responseCode = "400", description = "Invalid coupon data",
+                    content = @Content(schema = @Schema(implementation = ProblemDetail.class))),
+            @ApiResponse(responseCode = "409", description = "Coupon code already exists",
+                    content = @Content(schema = @Schema(implementation = ProblemDetail.class)))
+    })
     @PostMapping
     ResponseEntity<Void> createCoupon(@RequestBody @Valid CreateCouponRequestBody requestBody) {
         var command = new CreateCouponCommand(
@@ -44,6 +63,12 @@ class CouponController {
         return ResponseEntity.created(location).build();
     }
 
+    @Operation(summary = "Get coupon by ID")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Coupon found"),
+            @ApiResponse(responseCode = "404", description = "Coupon not found",
+                    content = @Content(schema = @Schema(implementation = ProblemDetail.class)))
+    })
     @GetMapping("/{id}")
     ResponseEntity<CouponViewResponseBody> getCouponById(@PathVariable String id) {
         CouponView coupon = couponReadUseCase.getCouponById(id);
@@ -57,6 +82,12 @@ class CouponController {
         return ResponseEntity.ok(response);
     }
 
+    @Operation(summary = "List coupons")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Paginated list of coupons"),
+            @ApiResponse(responseCode = "400", description = "Invalid query parameters",
+                    content = @Content(schema = @Schema(implementation = ProblemDetail.class)))
+    })
     @GetMapping
     ResponseEntity<CouponListPageResponseBody> getListOfCoupons(@Valid CouponListQuery queryParams) {
         var query = new GetCouponsQuery(
@@ -93,6 +124,12 @@ class CouponController {
         ));
     }
 
+    @Operation(summary = "Delete coupon by ID")
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "Coupon deleted"),
+            @ApiResponse(responseCode = "404", description = "Coupon not found",
+                    content = @Content(schema = @Schema(implementation = ProblemDetail.class)))
+    })
     @DeleteMapping("/{id}")
     ResponseEntity<Void> deleteCoupon(@PathVariable String id) {
         couponDeletionUseCase.delete(id);
@@ -106,5 +143,4 @@ class CouponController {
                 .build()
                 .toUri();
     }
-
 }
