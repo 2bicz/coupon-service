@@ -2,6 +2,7 @@ package com.github.tubicz.coupon_service.adapter.in.web;
 
 import com.github.tubicz.coupon_service.adapter.in.web.dto.*;
 import com.github.tubicz.coupon_service.application.port.in.CouponCreationUseCase;
+import com.github.tubicz.coupon_service.application.port.in.CouponDeletionUseCase;
 import com.github.tubicz.coupon_service.application.port.in.CouponReadUseCase;
 import com.github.tubicz.coupon_service.application.port.in.CreateCouponCommand;
 import com.github.tubicz.coupon_service.application.port.in.GetCouponsQuery;
@@ -24,6 +25,7 @@ import java.util.List;
 class CouponController {
     private final CouponCreationUseCase couponCreationUseCase;
     private final CouponReadUseCase couponReadUseCase;
+    private final CouponDeletionUseCase couponDeletionUseCase;
 
     @PostMapping
     ResponseEntity<Void> createCoupon(@RequestBody @Valid CreateCouponRequestBody requestBody) {
@@ -56,7 +58,6 @@ class CouponController {
         return ResponseEntity.ok(response);
     }
 
-    // todo: Move response building to separate mapper class
     @GetMapping
     ResponseEntity<CouponListPageResponseBody> getListOfCoupons(@Valid CouponListQuery queryParams) {
         var query = new GetCouponsQuery(
@@ -91,6 +92,12 @@ class CouponController {
                 next,
                 last
         ));
+    }
+
+    @DeleteMapping("/{id}")
+    ResponseEntity<Void> deleteCoupon(@PathVariable String id) {
+        couponDeletionUseCase.delete(id);
+        return ResponseEntity.noContent().build();
     }
 
     private URI buildPageUri(int page, int size) {

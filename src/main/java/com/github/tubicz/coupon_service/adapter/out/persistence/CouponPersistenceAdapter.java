@@ -13,6 +13,11 @@ class CouponPersistenceAdapter implements CouponRepositoryPort {
     private final CouponRepository repository;
 
     @Override
+    public String create(Coupon coupon) {
+        return repository.save(toEntity(coupon)).getId().toString();
+    }
+
+    @Override
     public Optional<Coupon> getByCodeWithLock(String code) {
         return repository.findByCodeIgnoreCaseWithLock(code).map(this::toDomain);
     }
@@ -23,8 +28,13 @@ class CouponPersistenceAdapter implements CouponRepositoryPort {
     }
 
     @Override
-    public String create(Coupon coupon) {
-        return repository.save(toEntity(coupon)).getId().toString();
+    public boolean existsById(String id) {
+        return repository.existsById(java.util.UUID.fromString(id));
+    }
+
+    @Override
+    public void deleteById(String id) {
+        repository.deleteById(java.util.UUID.fromString(id));
     }
 
     private CouponEntity toEntity(Coupon domain) {
