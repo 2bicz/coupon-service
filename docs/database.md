@@ -16,10 +16,6 @@ Represents an external application that integrates with this service. Each syste
 |---|---|---|
 | `id` | uuid | PK, auto-generated |
 | `client_id` | varchar(100) | Unique. Used as the system identifier in requests |
-| `name` | varchar(150) | Human-readable name |
-| `created_at` | timestamptz | Auto-set on insert |
-
-Index: `idx_client_id` on `client_id`.
 
 ---
 
@@ -32,7 +28,6 @@ A user from an external system. Identified by the combination of `external_syste
 | `id` | uuid | PK, auto-generated |
 | `external_system_id` | uuid | FK → `external_system.id` |
 | `origin_user_id` | text | The user's ID as known in the external system |
-| `created_at` | timestamptz | Auto-set on insert |
 
 Unique constraint: `(external_system_id, origin_user_id)`.
 
@@ -44,7 +39,7 @@ Reference table of valid ISO 3166-1 alpha-2 country codes. Seeded at startup via
 
 | Column | Type | Notes |
 |---|---|---|
-| `code` | char(2) | PK. ISO 3166-1 alpha-2 (e.g. `PL`, `DE`) |
+| `code` | varchar(2) | PK. ISO 3166-1 alpha-2 (e.g. `PL`, `DE`) |
 
 ---
 

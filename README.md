@@ -4,12 +4,12 @@ A REST service for managing and redeeming discount coupons. Coupons are restrict
 
 ## Documentation
 
-| Topic | File |
-|---|---|
-| How to run (Docker, MaxMind setup, env vars) | [docs/running.md](docs/running.md) |
-| Architecture, design decisions, trade-offs | [docs/architecture.md](docs/architecture.md) |
-| Database schema (tables, view, indexes) | [docs/database.md](docs/database.md) |
-| API reference and Swagger UI | [docs/api.md](docs/api.md) |
+| Topic | File                                      |
+|---|-------------------------------------------|
+| How to run (Docker, MaxMind setup, env vars) | [docs/running.md](docs/running.md)        |
+| Architecture, design decisions, trade-offs | [docs/decisions.md](docs/decisions.md) |
+| Database schema (tables, view, indexes) | [docs/database.md](docs/database.md)      |
+| API reference and Swagger UI | [docs/api.md](docs/api.md)                |
 
 ## Diagrams
 
