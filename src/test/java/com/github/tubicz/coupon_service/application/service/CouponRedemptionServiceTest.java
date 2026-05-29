@@ -8,18 +8,22 @@ import com.github.tubicz.coupon_service.application.port.out.CouponRepositoryPor
 import com.github.tubicz.coupon_service.application.port.out.ExternalPartyRepositoryPort;
 import com.github.tubicz.coupon_service.application.port.out.IpGeolocationPort;
 import com.github.tubicz.coupon_service.domain.command.Coupon;
+import com.github.tubicz.coupon_service.domain.command.CouponRedemption;
 import com.github.tubicz.coupon_service.domain.exception.CouponAlreadyRedeemedByUserException;
 import com.github.tubicz.coupon_service.domain.exception.CouponExhaustedException;
 import com.github.tubicz.coupon_service.domain.exception.CouponNotEligibleForCountryException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
@@ -44,7 +48,7 @@ class CouponRedemptionServiceTest {
     CouponRedemptionService service;
 
     private static final String COUPON_ID = "coupon-uuid";
-    private static final Coupon COUPON = new Coupon(COUPON_ID, "CODE", 10, List.of("US"));
+    private static final Coupon COUPON = new Coupon(COUPON_ID, "CODE", 10, List.of("US"), Instant.now());
     private static final RedeemCouponCommand COMMAND =
             new RedeemCouponCommand("CODE", "user1", "system1", "1.2.3.4");
 
@@ -58,7 +62,12 @@ class CouponRedemptionServiceTest {
 
         assertThatCode(() -> service.redeem(COMMAND)).doesNotThrowAnyException();
 
-        verify(redemptionRepository).save(COUPON_ID, "user-uuid");
+        ArgumentCaptor<CouponRedemption> captor = ArgumentCaptor.forClass(CouponRedemption.class);
+        verify(redemptionRepository).save(captor.capture());
+        CouponRedemption saved = captor.getValue();
+        assertThat(saved.couponId()).isEqualTo(COUPON_ID);
+        assertThat(saved.externalUserId()).isEqualTo("user-uuid");
+        assertThat(saved.createdAt()).isNotNull();
     }
 
     @Test
@@ -79,7 +88,7 @@ class CouponRedemptionServiceTest {
         assertThatThrownBy(() -> service.redeem(COMMAND))
                 .isInstanceOf(CouponNotFoundException.class);
 
-        verify(redemptionRepository, never()).save(any(), any());
+        verify(redemptionRepository, never()).save(any());
     }
 
     @Test
@@ -91,7 +100,7 @@ class CouponRedemptionServiceTest {
         assertThatThrownBy(() -> service.redeem(COMMAND))
                 .isInstanceOf(CouponExhaustedException.class);
 
-        verify(redemptionRepository, never()).save(any(), any());
+        verify(redemptionRepository, never()).save(any());
     }
 
     @Test
@@ -103,7 +112,7 @@ class CouponRedemptionServiceTest {
         assertThatThrownBy(() -> service.redeem(COMMAND))
                 .isInstanceOf(CouponNotEligibleForCountryException.class);
 
-        verify(redemptionRepository, never()).save(any(), any());
+        verify(redemptionRepository, never()).save(any());
     }
 
     @Test
@@ -117,6 +126,6 @@ class CouponRedemptionServiceTest {
         assertThatThrownBy(() -> service.redeem(COMMAND))
                 .isInstanceOf(CouponAlreadyRedeemedByUserException.class);
 
-        verify(redemptionRepository, never()).save(any(), any());
+        verify(redemptionRepository, never()).save(any());
     }
 }

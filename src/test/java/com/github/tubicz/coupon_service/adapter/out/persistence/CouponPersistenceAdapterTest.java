@@ -43,7 +43,7 @@ class CouponPersistenceAdapterTest {
 
     @Test
     void createReturnsCouponUuidString() {
-        String id = couponAdapter.create(new Coupon(null, "NEWCOUPON", 10, List.of("US")));
+        String id = couponAdapter.create(new Coupon(null, "NEWCOUPON", 10, List.of("US"), Instant.now()));
 
         assertThat(UUID.fromString(id)).isNotNull();
     }
@@ -55,7 +55,7 @@ class CouponPersistenceAdapterTest {
 
     @Test
     void existsByCodeCaseInsensitiveReturnsTrueAfterCreate() {
-        couponAdapter.create(new Coupon(null, "CASECHECK", 5, List.of("DE")));
+        couponAdapter.create(new Coupon(null, "CASECHECK", 5, List.of("DE"), Instant.now()));
 
         assertThat(couponAdapter.existsByCode("CASECHECK")).isTrue();
         assertThat(couponAdapter.existsByCode("casecheck")).isTrue();
@@ -81,8 +81,8 @@ class CouponPersistenceAdapterTest {
 
     @Test
     void getAllWithNoFilterReturnsCoupons() {
-        couponAdapter.create(new Coupon(null, "PAGED1", 5, List.of("US")));
-        couponAdapter.create(new Coupon(null, "PAGED2", 5, List.of("DE")));
+        couponAdapter.create(new Coupon(null, "PAGED1", 5, List.of("US"), Instant.now()));
+        couponAdapter.create(new Coupon(null, "PAGED2", 5, List.of("DE"), Instant.now()));
 
         CouponPage page = couponQueryAdapter.getAll(new GetCouponsQuery(0, 10, null, null, null));
 
@@ -92,8 +92,8 @@ class CouponPersistenceAdapterTest {
 
     @Test
     void getAllWithSearchFilterReturnsMatchingCoupons() {
-        couponAdapter.create(new Coupon(null, "SEARCHME", 5, List.of("US")));
-        couponAdapter.create(new Coupon(null, "OTHER", 5, List.of("US")));
+        couponAdapter.create(new Coupon(null, "SEARCHME", 5, List.of("US"), Instant.now()));
+        couponAdapter.create(new Coupon(null, "OTHER", 5, List.of("US"), Instant.now()));
 
         CouponPage page = couponQueryAdapter.getAll(new GetCouponsQuery(0, 10, "search", null, null));
 
@@ -102,9 +102,9 @@ class CouponPersistenceAdapterTest {
 
     @Test
     void getAllWithCreatedAtFromFilterExcludesOlderCoupons() {
-        couponAdapter.create(new Coupon(null, "DATETEST1", 5, List.of("US")));
+        couponAdapter.create(new Coupon(null, "DATETEST1", 5, List.of("US"), Instant.now()));
         Instant afterCreate = Instant.now();
-        couponAdapter.create(new Coupon(null, "DATETEST2", 5, List.of("US")));
+        couponAdapter.create(new Coupon(null, "DATETEST2", 5, List.of("US"), Instant.now()));
 
         CouponPage page = couponQueryAdapter.getAll(new GetCouponsQuery(0, 10, null, afterCreate, null));
 
@@ -114,7 +114,7 @@ class CouponPersistenceAdapterTest {
     @Test
     void getAllRespectsPagination() {
         for (int i = 0; i < 5; i++) {
-            couponAdapter.create(new Coupon(null, "PGTEST" + i, 1, List.of("PL")));
+            couponAdapter.create(new Coupon(null, "PGTEST" + i, 1, List.of("PL"), Instant.now()));
         }
 
         CouponPage page = couponQueryAdapter.getAll(new GetCouponsQuery(0, 2, "pgtest", null, null));

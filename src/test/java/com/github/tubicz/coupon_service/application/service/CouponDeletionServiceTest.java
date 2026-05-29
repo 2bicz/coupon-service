@@ -1,6 +1,8 @@
 package com.github.tubicz.coupon_service.application.service;
 
+import com.github.tubicz.coupon_service.application.exception.CouponHasRedemptionsException;
 import com.github.tubicz.coupon_service.application.exception.CouponNotFoundException;
+import com.github.tubicz.coupon_service.application.port.out.CouponRedemptionRepositoryPort;
 import com.github.tubicz.coupon_service.application.port.out.CouponRepositoryPort;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,12 +23,16 @@ class CouponDeletionServiceTest {
     @Mock
     CouponRepositoryPort couponRepositoryPort;
 
+    @Mock
+    CouponRedemptionRepositoryPort couponRedemptionRepositoryPort;
+
     @InjectMocks
     CouponDeletionService service;
 
     @Test
-    void deleteCallsRepositoryWhenCouponExists() {
+    void deleteCallsRepositoryWhenCouponExistsAndHasNoRedemptions() {
         when(couponRepositoryPort.existsById("some-id")).thenReturn(true);
+        when(couponRedemptionRepositoryPort.existsByCouponId("some-id")).thenReturn(false);
 
         assertThatCode(() -> service.delete("some-id")).doesNotThrowAnyException();
 
@@ -39,6 +45,17 @@ class CouponDeletionServiceTest {
 
         assertThatThrownBy(() -> service.delete("missing-id"))
                 .isInstanceOf(CouponNotFoundException.class);
+
+        verify(couponRepositoryPort, never()).deleteById(any());
+    }
+
+    @Test
+    void deleteThrowsWhenCouponHasRedemptions() {
+        when(couponRepositoryPort.existsById("some-id")).thenReturn(true);
+        when(couponRedemptionRepositoryPort.existsByCouponId("some-id")).thenReturn(true);
+
+        assertThatThrownBy(() -> service.delete("some-id"))
+                .isInstanceOf(CouponHasRedemptionsException.class);
 
         verify(couponRepositoryPort, never()).deleteById(any());
     }

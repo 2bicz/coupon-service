@@ -17,6 +17,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.postgresql.PostgreSQLContainer;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -42,7 +43,7 @@ class CouponQueryAdapterTest {
 
     @Test
     void getByIdReturnsCouponViewWithCorrectFields() {
-        String id = couponAdapter.create(new Coupon(null, "QTESTVIEW", 5, List.of("US", "DE")));
+        String id = couponAdapter.create(new Coupon(null, "QTESTVIEW", 5, List.of("US", "DE"), Instant.now()));
 
         Optional<CouponView> result = queryAdapter.getById(id);
 
@@ -65,9 +66,9 @@ class CouponQueryAdapterTest {
 
     @Test
     void getAllWithCreatedAtToFilterExcludesNewerCoupons() {
-        couponAdapter.create(new Coupon(null, "EARLY", 5, List.of("US")));
         Instant cutoff = Instant.now();
-        couponAdapter.create(new Coupon(null, "LATE", 5, List.of("US")));
+        couponAdapter.create(new Coupon(null, "EARLY", 5, List.of("US"), cutoff.minus(14, ChronoUnit.DAYS)));
+        couponAdapter.create(new Coupon(null, "LATE", 5, List.of("US"), cutoff.plus(14, ChronoUnit.DAYS)));
 
         CouponPage page = queryAdapter.getAll(new GetCouponsQuery(0, 10, null, null, cutoff));
 

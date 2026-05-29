@@ -3,6 +3,7 @@ package com.github.tubicz.coupon_service.adapter.in.web;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tubicz.coupon_service.application.exception.AlreadyExistingCouponCodeException;
 import com.github.tubicz.coupon_service.application.exception.CountryNotFoundException;
+import com.github.tubicz.coupon_service.application.exception.CouponHasRedemptionsException;
 import com.github.tubicz.coupon_service.application.exception.CouponNotFoundException;
 import com.github.tubicz.coupon_service.application.port.in.CouponCreationUseCase;
 import com.github.tubicz.coupon_service.application.port.in.CouponDeletionUseCase;
@@ -240,5 +241,14 @@ class CouponControllerTest {
         mockMvc.perform(delete("/coupon/{id}", UUID.randomUUID()).with(csrf()))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.errorCode").value("COUPON_NOT_FOUND"));
+    }
+
+    @Test
+    void deleteCouponReturns409WhenCouponHasRedemptions() throws Exception {
+        doThrow(new CouponHasRedemptionsException("some-id")).when(couponDeletionUseCase).delete(any());
+
+        mockMvc.perform(delete("/coupon/{id}", UUID.randomUUID()).with(csrf()))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.errorCode").value("COUPON_HAS_REDEMPTIONS"));
     }
 }
