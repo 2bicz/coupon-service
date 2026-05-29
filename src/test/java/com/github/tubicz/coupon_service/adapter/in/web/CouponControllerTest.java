@@ -6,12 +6,13 @@ import com.github.tubicz.coupon_service.application.exception.AlreadyExistingCou
 import com.github.tubicz.coupon_service.application.exception.CountryNotFoundException;
 import com.github.tubicz.coupon_service.application.exception.CouponNotFoundException;
 import com.github.tubicz.coupon_service.application.port.in.CouponCreationUseCase;
+import com.github.tubicz.coupon_service.application.port.in.CouponDeletionUseCase;
 import com.github.tubicz.coupon_service.application.port.in.CouponReadUseCase;
 import com.github.tubicz.coupon_service.domain.query.CouponPage;
 import com.github.tubicz.coupon_service.domain.query.CouponView;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -39,14 +40,16 @@ class CouponControllerTest {
     @Autowired
     MockMvc mockMvc;
 
-    @Autowired
-    ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @MockitoBean
     CouponCreationUseCase couponCreationUseCase;
 
     @MockitoBean
     CouponReadUseCase couponReadUseCase;
+
+    @MockitoBean
+    CouponDeletionUseCase couponDeletionUseCase;
 
     @Test
     void createCouponReturns201WithLocationHeader() throws Exception {
@@ -129,7 +132,7 @@ class CouponControllerTest {
 
     @Test
     void getListOfCouponsReturns200WithPagedContent() throws Exception {
-        var view = new CouponView(UUID.randomUUID(), "SUMMER20", Instant.parse("2024-06-01T00:00:00Z"), 10, 3, List.of("US"));
+        var view = new CouponView(UUID.randomUUID().toString(), "SUMMER20", Instant.parse("2024-06-01T00:00:00Z"), 10, 3, List.of("US"));
         when(couponReadUseCase.getAll(any())).thenReturn(new CouponPage(List.of(view), 0, 10, 1L));
 
         mockMvc.perform(get("/coupon").param("page", "0").param("size", "10"))
@@ -201,7 +204,7 @@ class CouponControllerTest {
     @Test
     void getCouponByIdReturns200WithCouponData() throws Exception {
         var id = UUID.randomUUID();
-        var view = new CouponView(id, "PROMO", Instant.parse("2024-06-01T00:00:00Z"), 5, 1, List.of("DE"));
+        var view = new CouponView(id.toString(), "PROMO", Instant.parse("2024-06-01T00:00:00Z"), 5, 1, List.of("DE"));
         when(couponReadUseCase.getCouponById(id.toString())).thenReturn(view);
 
         mockMvc.perform(get("/coupon/{id}", id))
