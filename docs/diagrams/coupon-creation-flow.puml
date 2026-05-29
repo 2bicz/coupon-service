@@ -1,0 +1,53 @@
+@startuml coupon-creation-flow
+
+title Coupon Creation Flow
+
+actor Client
+
+participant "CouponController" as Controller
+participant "CouponCreationService" as Service
+participant "Coupon\n(Domain)" as Domain
+database "PostgreSQL" as DB
+
+Client -> Controller : POST /coupon\n{code, usageLimit, countryCodes}
+activate Controller
+
+Controller -> Service : create(CreateCouponCommand)
+activate Service
+
+Service -> DB : existsByCode(code)
+DB --> Service : result
+
+alt code already exists
+    Service --> Controller : AlreadyExistingCouponCodeException
+    Controller --> Client : 409 Conflict
+end
+
+Service -> DB : findUnknownCountryCodes(countryCodes)
+DB --> Service : unknownCodes
+
+alt unknown country codes present
+    Service --> Controller : CountryNotFoundException
+    Controller --> Client : 404 Not Found
+end
+
+Service -> Domain : new Coupon(null, code, usageLimit, countryCodes)
+activate Domain
+note right of Domain
+  Validates and normalizes:
+  - code must not be blank
+  - code is stripped and uppercased
+end note
+Domain --> Service : Coupon
+deactivate Domain
+
+Service -> DB : create(coupon)
+DB --> Service : couponId
+
+Service --> Controller : couponId
+deactivate Service
+
+Controller --> Client : 201 Created\nLocation: /coupon/{id}
+deactivate Controller
+
+@enduml

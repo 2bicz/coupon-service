@@ -1,0 +1,72 @@
+@startuml database-schema
+
+title Database Schema
+
+hide empty methods
+
+entity "external_system" as es {
+  * id : uuid <<PK>>
+  --
+  * client_id : varchar(100) <<UK>>
+  * client_secret_hash : text
+  * name : varchar(150)
+  * active : boolean = true
+  * created_at : timestamptz
+}
+
+entity "external_user" as eu {
+  * id : uuid <<PK>>
+  --
+  * external_system_id : uuid <<FK>>
+  * origin_user_id : text
+  created_at : timestamptz
+  --
+  UK(external_system_id, origin_user_id)
+}
+
+entity "country" as co {
+  * code : char(2) <<PK>>
+}
+
+entity "coupon" as cp {
+  * id : uuid <<PK>>
+  --
+  * code : varchar(255) <<UK>>
+  * usage_limit : int
+  * created_at : timestamptz
+}
+
+entity "coupon_country" as cc {
+  * coupon_id : uuid <<FK>>
+  * country_code : char(2) <<FK>>
+}
+
+entity "coupon_redemption" as cr {
+  * id : uuid <<PK>>
+  --
+  * coupon_id : uuid <<FK>>
+  * external_user_id : uuid <<FK>>
+  * created_at : timestamptz
+  --
+  UK(coupon_id, external_user_id)
+}
+
+entity "coupon_view" as cv <<view>> {
+  id : uuid
+  code : varchar
+  usage_limit : int
+  usage_count : bigint
+  created_at : timestamptz
+  country_codes : text[]
+}
+
+eu }o--|| es : external_system_id
+cc }o--|| cp : coupon_id
+cc }o--|| co : country_code
+cr }o--|| cp : coupon_id
+cr }o--|| eu : external_user_id
+cv ..> cp : aggregates
+cv ..> cr : aggregates
+cv ..> cc : aggregates
+
+@enduml

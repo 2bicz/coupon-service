@@ -1,0 +1,75 @@
+@startuml coupon-redemption-flow
+
+title Coupon Redemption Flow
+
+actor Client
+
+participant "CouponRedemptionController" as Controller
+participant "CouponRedemptionService" as Service
+participant "Coupon\n(Domain)" as Domain
+participant "MaxMind GeoIP2\n(offline DB)" as GeoIP
+database "PostgreSQL" as DB
+
+Client -> Controller : POST /coupon-redemption\n{couponCode, externalUser, externalSystem}
+activate Controller
+
+Controller -> Service : redeem(RedeemCouponCommand)
+activate Service
+note over Service : BEGIN TRANSACTION
+
+Service -> GeoIP : getCountryCode(ipAddress)
+activate GeoIP
+alt IP not resolvable or country unknown
+    GeoIP --> Service : IpNotResolvableException
+    Service --> Controller : 422 Unprocessable Entity
+end
+GeoIP --> Service : countryCode
+deactivate GeoIP
+
+Service -> DB : getByCodeWithLock(couponCode)\n[SELECT ... FOR UPDATE]
+note right of DB : Pessimistic lock\nacquired on coupon row
+alt coupon not found
+    DB --> Service : empty
+    Service --> Controller : 404 Not Found
+end
+DB --> Service : Coupon
+
+Service -> DB : countByCouponId(couponId)
+DB --> Service : currentRedemptionCount
+
+Service -> Domain : validateEligibility(count, countryCode)
+activate Domain
+alt usage limit reached
+    Domain --> Service : CouponExhaustedException
+    Service --> Controller : 409 Conflict
+end
+alt country not in allowed list
+    Domain --> Service : CouponNotEligibleForCountryException
+    Service --> Controller : 403 Forbidden
+end
+Domain --> Service : ok
+deactivate Domain
+
+note over Service : SUSPEND OUTER TX\nBEGIN INNER TX (REQUIRES_NEW)
+Service -> DB : findOrCreate(externalSystem, externalUser)
+note right of DB : Upsert with constraint\nviolation retry on race
+DB --> Service : externalUserId
+note over Service : COMMIT INNER TX\nRESUME OUTER TX
+
+Service -> DB : existsByCouponIdAndUserId(couponId, externalUserId)
+alt coupon already redeemed by this user
+    DB --> Service : true
+    Service --> Controller : 409 Conflict
+end
+DB --> Service : false
+
+Service -> DB : save(couponId, externalUserId)
+note over Service : COMMIT TRANSACTION\n(pessimistic lock released)
+
+Service --> Controller : void
+deactivate Service
+
+Controller --> Client : 201 Created
+deactivate Controller
+
+@enduml
