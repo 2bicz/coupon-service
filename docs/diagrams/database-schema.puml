@@ -8,9 +8,7 @@ entity "external_system" as es {
   * id : uuid <<PK>>
   --
   * client_id : varchar(100) <<UK>>
-  * client_secret_hash : text
   * name : varchar(150)
-  * active : boolean = true
   * created_at : timestamptz
 }
 

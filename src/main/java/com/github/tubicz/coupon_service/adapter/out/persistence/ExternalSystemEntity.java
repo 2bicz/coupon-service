@@ -21,15 +21,8 @@ class ExternalSystemEntity {
     @Column(name = "client_id", nullable = false, unique = true, length = 100)
     private String clientId;
 
-    @Column(name = "client_secret_hash", nullable = false)
-    private String clientSecretHash;
-
     @Column(name = "name", nullable = false, length = 150)
     private String name;
-
-    @Column(name = "active", nullable = false)
-    @Builder.Default
-    private boolean active = true;
 
     @CreatedDate
     @Column(name = "created_at", nullable = false)

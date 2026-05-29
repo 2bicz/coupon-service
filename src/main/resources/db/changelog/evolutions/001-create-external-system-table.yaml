@@ -14,25 +14,8 @@ databaseChangeLog:
                     primaryKey: true
                     nullable: false
               - column:
-                  name: client_id
-                  type: varchar(100)
-                  constraints:
-                    nullable: false
-                    unique: true
-              - column:
-                  name: client_secret_hash
-                  type: text
-                  constraints:
-                    nullable: false
-              - column:
                   name: name
                   type: varchar(150)
-                  constraints:
-                    nullable: false
-              - column:
-                  name: active
-                  type: boolean
-                  defaultValueBoolean: true
                   constraints:
                     nullable: false
               - column:
@@ -41,10 +24,3 @@ databaseChangeLog:
                   defaultValueComputed: now()
                   constraints:
                     nullable: false
-
-        - createIndex:
-            indexName: idx_client_id
-            tableName: external_system
-            columns:
-              - column:
-                  name: client_id

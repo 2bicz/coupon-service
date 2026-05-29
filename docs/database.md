@@ -16,9 +16,7 @@ Represents an external application that integrates with this service. Each syste
 |---|---|---|
 | `id` | uuid | PK, auto-generated |
 | `client_id` | varchar(100) | Unique. Used as the system identifier in requests |
-| `client_secret_hash` | text | Reserved for future authentication |
 | `name` | varchar(150) | Human-readable name |
-| `active` | boolean | Default `true` |
 | `created_at` | timestamptz | Auto-set on insert |
 
 Index: `idx_client_id` on `client_id`.
