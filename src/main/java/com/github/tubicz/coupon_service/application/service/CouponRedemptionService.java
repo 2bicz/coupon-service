@@ -1,6 +1,7 @@
 package com.github.tubicz.coupon_service.application.service;
 
 import com.github.tubicz.coupon_service.domain.command.Coupon;
+import com.github.tubicz.coupon_service.domain.command.CouponRedemption;
 import com.github.tubicz.coupon_service.domain.exception.CouponAlreadyRedeemedByUserException;
 import com.github.tubicz.coupon_service.application.exception.CouponNotFoundException;
 import com.github.tubicz.coupon_service.application.port.in.CouponRedemptionUseCase;
@@ -12,6 +13,8 @@ import com.github.tubicz.coupon_service.application.port.out.IpGeolocationPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.Instant;
 
 @Service
 @RequiredArgsConstructor
@@ -35,7 +38,7 @@ class CouponRedemptionService implements CouponRedemptionUseCase {
         var externalUserId = externalPartyRepository.findOrCreateExternalUserId(command.externalSystem(), command.externalUser());
         assertCouponNotYetRedeemedByUser(coupon, externalUserId);
 
-        redemptionRepository.save(coupon.id(), externalUserId);
+        redemptionRepository.save(new CouponRedemption(coupon.id(), externalUserId, Instant.now()));
     }
 
     private Coupon getLockedCoupon(String couponCode) {

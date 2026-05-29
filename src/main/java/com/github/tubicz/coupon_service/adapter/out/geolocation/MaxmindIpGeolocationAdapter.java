@@ -5,6 +5,7 @@ import com.github.tubicz.coupon_service.application.exception.IpNotResolvableExc
 import com.maxmind.geoip2.DatabaseReader;
 import com.maxmind.geoip2.exception.AddressNotFoundException;
 import com.maxmind.geoip2.exception.GeoIp2Exception;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -13,6 +14,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
+@Slf4j
 @Component
 class MaxmindIpGeolocationAdapter implements IpGeolocationPort {
     private final String dbPath;
@@ -34,6 +36,7 @@ class MaxmindIpGeolocationAdapter implements IpGeolocationPort {
         } catch (UnknownHostException | AddressNotFoundException e) {
             throw new IpNotResolvableException(ipAddress);
         } catch (IOException | GeoIp2Exception e) {
+            log.warn("Geolocation lookup failed for IP {}: {} - {}", ipAddress, e.getClass().getSimpleName(), e.getMessage());
             throw new IpNotResolvableException(ipAddress);
         }
     }

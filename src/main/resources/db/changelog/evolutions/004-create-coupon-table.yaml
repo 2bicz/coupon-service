@@ -27,7 +27,8 @@ databaseChangeLog:
               - column:
                   name: created_at
                   type: timestamptz
-                  defaultValueComputed: now()
+                  constraints:
+                    nullable: false
 
         - sql:
             sql: |

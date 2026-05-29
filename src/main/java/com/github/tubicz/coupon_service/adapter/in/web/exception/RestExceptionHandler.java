@@ -1,6 +1,7 @@
 package com.github.tubicz.coupon_service.adapter.in.web.exception;
 
 import com.github.tubicz.coupon_service.application.exception.AlreadyExistingCouponCodeException;
+import com.github.tubicz.coupon_service.application.exception.CouponHasRedemptionsException;
 import com.github.tubicz.coupon_service.domain.exception.CouponAlreadyRedeemedByUserException;
 import com.github.tubicz.coupon_service.domain.exception.CouponExhaustedException;
 import com.github.tubicz.coupon_service.domain.exception.CouponNotEligibleForCountryException;
@@ -137,6 +138,15 @@ class RestExceptionHandler {
                 .title("Coupon already redeemed")
                 .detail(exception.getMessage())
                 .errorCode(ErrorCode.COUPON_ALREADY_REDEEMED)
+                .build();
+    }
+
+    @ExceptionHandler(CouponHasRedemptionsException.class)
+    public ProblemDetail handle(CouponHasRedemptionsException exception) {
+        return new ProblemDetailBuilder(HttpStatus.CONFLICT)
+                .title("Coupon cannot be deleted")
+                .detail(exception.getMessage())
+                .errorCode(ErrorCode.COUPON_HAS_REDEMPTIONS)
                 .build();
     }
 }

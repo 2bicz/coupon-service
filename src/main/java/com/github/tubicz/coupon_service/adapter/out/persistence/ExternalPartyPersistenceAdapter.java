@@ -27,8 +27,6 @@ class ExternalPartyPersistenceAdapter implements ExternalPartyRepositoryPort {
             try {
                 return systemRepository.saveAndFlush(ExternalSystemEntity.builder()
                         .clientId(clientId)
-                        .name(clientId)
-                        .clientSecretHash("")
                         .build());
             } catch (DataIntegrityViolationException e) {
                 return systemRepository.findByClientId(clientId).orElseThrow();

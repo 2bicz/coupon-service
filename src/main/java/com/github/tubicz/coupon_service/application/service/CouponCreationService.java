@@ -10,6 +10,7 @@ import com.github.tubicz.coupon_service.domain.command.Coupon;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.Collection;
 import java.util.Set;
 
@@ -24,7 +25,7 @@ class CouponCreationService implements CouponCreationUseCase {
         assertCouponCodeNotExists(command.code());
         assertAllCountriesExist(command.allowedCountryCodes());
 
-        var coupon = new Coupon(null, command.code(), command.usageLimit(), command.allowedCountryCodes());
+        var coupon = new Coupon(null, command.code(), command.usageLimit(), command.allowedCountryCodes(), Instant.now());
         return couponRepositoryPort.create(coupon);
     }
 

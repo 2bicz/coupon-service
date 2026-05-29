@@ -6,5 +6,6 @@ import java.util.UUID;
 
 interface CouponRedemptionJpaRepository extends JpaRepository<CouponRedemptionEntity, UUID> {
     boolean existsByCouponIdAndExternalUserId(UUID couponId, UUID externalUserId);
+    boolean existsByCouponId(UUID couponId);
     int countByCouponId(UUID couponId);
 }

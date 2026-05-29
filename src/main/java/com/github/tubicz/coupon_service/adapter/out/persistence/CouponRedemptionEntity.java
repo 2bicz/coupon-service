@@ -2,7 +2,6 @@ package com.github.tubicz.coupon_service.adapter.out.persistence;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -24,7 +23,6 @@ class CouponRedemptionEntity {
     @Column(name = "external_user_id", nullable = false)
     private UUID externalUserId;
 
-    @CreatedDate
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;
 }

@@ -42,6 +42,8 @@ class CouponController {
                             schema = @Schema(type = "string", format = "uri"))),
             @ApiResponse(responseCode = "400", description = "Invalid coupon data",
                     content = @Content(schema = @Schema(implementation = ProblemDetail.class))),
+            @ApiResponse(responseCode = "401", description = "Missing or invalid API key",
+                    content = @Content(schema = @Schema(implementation = ProblemDetail.class))),
             @ApiResponse(responseCode = "409", description = "Coupon code already exists",
                     content = @Content(schema = @Schema(implementation = ProblemDetail.class)))
     })
@@ -66,6 +68,8 @@ class CouponController {
     @Operation(summary = "Get coupon by ID")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Coupon found"),
+            @ApiResponse(responseCode = "401", description = "Missing or invalid API key",
+                    content = @Content(schema = @Schema(implementation = ProblemDetail.class))),
             @ApiResponse(responseCode = "404", description = "Coupon not found",
                     content = @Content(schema = @Schema(implementation = ProblemDetail.class)))
     })
@@ -86,6 +90,8 @@ class CouponController {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Paginated list of coupons"),
             @ApiResponse(responseCode = "400", description = "Invalid query parameters",
+                    content = @Content(schema = @Schema(implementation = ProblemDetail.class))),
+            @ApiResponse(responseCode = "401", description = "Missing or invalid API key",
                     content = @Content(schema = @Schema(implementation = ProblemDetail.class)))
     })
     @GetMapping
@@ -127,7 +133,11 @@ class CouponController {
     @Operation(summary = "Delete coupon by ID")
     @ApiResponses({
             @ApiResponse(responseCode = "204", description = "Coupon deleted"),
+            @ApiResponse(responseCode = "401", description = "Missing or invalid API key",
+                    content = @Content(schema = @Schema(implementation = ProblemDetail.class))),
             @ApiResponse(responseCode = "404", description = "Coupon not found",
+                    content = @Content(schema = @Schema(implementation = ProblemDetail.class))),
+            @ApiResponse(responseCode = "409", description = "Coupon has redemptions and cannot be deleted",
                     content = @Content(schema = @Schema(implementation = ProblemDetail.class)))
     })
     @DeleteMapping("/{id}")

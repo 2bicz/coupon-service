@@ -7,17 +7,17 @@ import java.time.Instant;
 class CouponViewSpecification {
 
     static Specification<CouponViewEntity> hasCodeLike(String search) {
-        return (root, query, cb) -> (search == null || search.isBlank()) ? null
-                : cb.like(cb.lower(root.get("code")), "%" + search.toLowerCase() + "%");
+        return (root, _, cb) -> (search == null || search.isBlank()) ? null
+                : cb.like(cb.upper(root.get("code")), "%" + search.toUpperCase() + "%");
     }
 
     static Specification<CouponViewEntity> createdAtFrom(Instant from) {
-        return (root, query, cb) -> from == null ? null
+        return (root, _, cb) -> from == null ? null
                 : cb.greaterThanOrEqualTo(root.get("createdAt"), from);
     }
 
     static Specification<CouponViewEntity> createdAtTo(Instant to) {
-        return (root, query, cb) -> to == null ? null
+        return (root, _, cb) -> to == null ? null
                 : cb.lessThan(root.get("createdAt"), to);
     }
 }

@@ -26,7 +26,8 @@ databaseChangeLog:
               - column:
                   name: created_at
                   type: timestamptz
-                  defaultValueComputed: now()
+                  constraints:
+                    nullable: false
 
         - addUniqueConstraint:
             tableName: coupon_redemption

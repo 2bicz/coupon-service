@@ -23,10 +23,6 @@ databaseChangeLog:
                   type: text
                   constraints:
                     nullable: false
-              - column:
-                  name: created_at
-                  type: timestamptz
-                  defaultValueComputed: now()
 
         - addUniqueConstraint:
             tableName: external_user

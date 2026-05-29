@@ -13,7 +13,7 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: country_code
-                  type: char(2)
+                  type: varchar(2)
                   constraints:
                     nullable: false
 

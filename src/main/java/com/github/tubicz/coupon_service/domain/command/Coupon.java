@@ -4,13 +4,15 @@ import com.github.tubicz.coupon_service.domain.exception.CouponExhaustedExceptio
 import com.github.tubicz.coupon_service.domain.exception.CouponNotEligibleForCountryException;
 import com.github.tubicz.coupon_service.domain.exception.InvalidCouponCodeFormatException;
 
+import java.time.Instant;
 import java.util.List;
 
 public record Coupon(
         String id,
         String code,
         int usageLimit,
-        List<String> allowedCountryCodes
+        List<String> allowedCountryCodes,
+        Instant createdAt
 ) {
     public Coupon {
         code = validateAndNormalizeCouponCode(code);

@@ -28,10 +28,15 @@ import org.springframework.web.bind.annotation.RestController;
 class CouponRedemptionController {
     private final CouponRedemptionUseCase couponRedemptionUseCase;
 
-    @Operation(summary = "Redeem a coupon")
+    @Operation(
+            summary = "Redeem a coupon",
+            description = "Redeems a coupon for a given external user. The caller's IP address is resolved to a country code and validated against the coupon's country restrictions. When testing locally, see **docs/running.md** in the repository for setup instructions."
+    )
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "Coupon redeemed successfully"),
             @ApiResponse(responseCode = "400", description = "Invalid request body",
+                    content = @Content(schema = @Schema(implementation = ProblemDetail.class))),
+            @ApiResponse(responseCode = "401", description = "Missing or invalid API key",
                     content = @Content(schema = @Schema(implementation = ProblemDetail.class))),
             @ApiResponse(responseCode = "403", description = "Coupon not eligible for the caller's country",
                     content = @Content(schema = @Schema(implementation = ProblemDetail.class))),

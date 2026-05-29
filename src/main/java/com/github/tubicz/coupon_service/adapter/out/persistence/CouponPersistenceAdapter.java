@@ -43,6 +43,7 @@ class CouponPersistenceAdapter implements CouponRepositoryPort {
                 .code(domain.code())
                 .usageLimit(domain.usageLimit())
                 .countries(allowedCountries)
+                .createdAt(domain.createdAt())
                 .build();
     }
 
@@ -51,7 +52,8 @@ class CouponPersistenceAdapter implements CouponRepositoryPort {
                 entity.getId().toString(),
                 entity.getCode(),
                 entity.getUsageLimit(),
-                entity.getCountries().stream().map(CountryEntity::getCode).toList()
+                entity.getCountries().stream().map(CountryEntity::getCode).toList(),
+                entity.getCreatedAt()
         );
     }
 }

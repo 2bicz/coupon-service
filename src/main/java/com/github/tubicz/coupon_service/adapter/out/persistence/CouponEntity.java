@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
 
 import java.time.Instant;
 import java.util.List;
@@ -28,7 +27,6 @@ class CouponEntity {
     @Column(name = "usage_limit",  nullable = false)
     private Integer usageLimit;
 
-    @CreatedDate
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;
 
